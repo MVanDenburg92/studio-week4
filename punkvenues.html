@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Store Locator</title>
+    <meta name='robots' content='noindex, nofollow'>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body {
+        color:#404040;
+        font:400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+        margin-top: 100px;
+ 	margin-bottom: 100px;
+        padding:0;
+        -webkit-font-smoothing:antialiased;
+      }
+	        list-style: none;
+}
+      /*.navbar {
+      margin-bottom: 0;
+	    }*/
+    * {
+        -webkit-box-sizing:border-box;
+        -moz-box-sizing:border-box;
+        box-sizing:border-box;
+      }
+      @font-face {
+      font-family: 'All Ages';
+      src: url('../fonts/AllAgesDemo-2DPX.ttf');
+      src: url('../fonts/AllAgesDemoBold-vX1L.ttf') format('truetype'), 
+        url('../fonts/AllAgesDemoBoldItalic-wgR9.ttf') format('truetype'); 
+      }
+	
+      .sidebar {
+        position:absolute;
+        width:33.3333%;
+        height:100%;
+        top:0;left:0;
+        overflow:hidden;
+        border-right:1px solid rgba(0,0,0,0.25);
+      }
+      .pad2 {
+        padding:20px;
+      }
+
+      .map {
+        position:absolute;
+        left:33.3333%;
+        width:66.6666%;
+        top:0;bottom:0;
+	margin-top:80px;
+	border-top:10px solid white;
+      }
+
+      h1 {
+        font-family: 'Press Start 2P', cursive;
+        font-size:40px;
+        margin:0;
+        font-weight:400;
+        line-height: 40px;
+        padding: 15px 10px;
+        color: white;
+      }
+
+      a {
+        color:#404040;
+        text-decoration:none;
+      }
+
+      a:hover {
+        color:#101010;
+      }
+
+      .heading {
+        background:#fff;
+        border-left:10px solid black;border-bottom:10px solid white; border-right:10px solid black;
+        min-height:60px;
+        line-height:80px;
+        padding:10px 10px;
+        text-align: center;
+        background-color: #03254c;
+        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSrhvQQJE6t028eU1lLjEguZs25ye3DUdFHsQ&usqp=CAU");
+      }
+
+      .listings {
+        height:100%;
+        overflow:auto;
+        padding-bottom:60px;
+      }
+
+      .listings .item {
+        display:block;
+        border-bottom:1px solid #eee; 
+        padding:15px;
+        padding-left:20px;
+        text-decoration:none;
+      }
+
+      .listings .item:last-child { border-bottom:none; padding-bottom:200px;}
+      .listings .item .title {
+        display:block;
+        color:#03254c;
+        font-weight:700;
+      }
+
+      .listings .item .title small { font-weight:400; }
+      .listings .item.active .title,
+      .listings .item .title:hover { color:#03254c; }
+      .listings .item.active {
+        background-color:#f8f8f8;
+      }
+      ::-webkit-scrollbar {
+        width:3px;
+        height:3px;
+        border-left:0;
+        background:rgba(0,0,0,0.1);
+      }
+      ::-webkit-scrollbar-track {
+        background:none;
+      }
+      ::-webkit-scrollbar-thumb {
+        background:#03254c;
+        border-radius:0;
+      }
+
+      .marker {
+        /*border: 2px solid;*/
+        cursor: pointer;
+        height:80px;
+        width:80px;
+        background-size: contain;
+        /*margin-left: 28px;*/
+        /*https://ih1.redbubble.net/image.372813300.2775/flat,128x128,075,f-pad,128x128,f8f8f8.u2.jpg*/
+        /*https://images.vexels.com/media/users/3/145801/isolated/lists/0678bf44860bd04584f32be273e1fe2b-punk-logo.png*/
+        background-image: url("https://cdn0.iconfinder.com/data/icons/punk-rock/64/hand-rock-punk-heavy-512.png");
+        /*background-color: rgba(0, 0, 0, 0);*/
+      }
+
+      .clearfix { display:block; }
+      .clearfix:after {
+        content:'.';
+        display:block;
+        height:0;
+        clear:both;
+        visibility:hidden;
+      }
+
+      /* Marker tweaks */
+      .mapboxgl-popup {
+        padding-bottom: 50px;
+      }
+
+      .mapboxgl-popup-close-button {
+        display:none;
+      }
+      .mapboxgl-popup-content {
+        font:400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+        padding:0;
+        width:180px;
+      }
+      .mapboxgl-popup-content-wrapper {
+        padding:1%;
+      }
+      .mapboxgl-popup-content h3 {
+        background:#410f2c;
+        color:#fff;
+        margin:0;
+        display:block;
+        padding:20px;
+        border-radius:3px 3px 0 0;
+        font-weight:700;
+        margin-top:-15px;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), url('https://i.ytimg.com/vi/quwZVI5EAxA/maxresdefault.jpg');
+          /*url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/cfaeac99-505b-4ca4-ab3b-fca1f1bb69e1/d11c2gl-f200386d-cd8f-40d4-a516-067623b693e1.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvY2ZhZWFjOTktNTA1Yi00Y2E0LWFiM2ItZmNhMWYxYmI2OWUxXC9kMTFjMmdsLWYyMDAzODZkLWNkOGYtNDBkNC1hNTE2LTA2NzYyM2I2OTNlMS5qcGcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.xcfwKro1ClDDmusWfB-A3NTmF8OmPUKXOw3R0zs40q0");*/
+          /*https://previews.123rf.com/images/kentoh/kentoh0901/kentoh090100100/4081623-green-punk-rock-emo-grunge-style-background.jpg*/
+          /*Cheetah print https://ih1.redbubble.net/image.765635979.9861/flat,750x1000,075,f.u2.jpg */
+        background-size: contain;
+      }
+
+      .mapboxgl-popup-content h4 {
+        margin:0;
+        display:block;
+        padding: 10px 10px 10px 10px;
+        font-weight:400;
+      }
+
+      .mapboxgl-popup-content div {
+        padding:10px;
+      }
+
+      .mapboxgl-container .leaflet-marker-icon {
+        cursor:pointer;
+      }
+
+      .mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+        margin-top: 15px;
+      }
+
+      .mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+        border-bottom-color: #91c949;
+      }
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+  border-left:10px solid black;
+  border-bottom:10px solid white; 
+  border-right:10px solid black;
+}
+.navbar a {
+  float: right;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 30px 16px;
+  text-decoration: none;
+  padding-right: 275px; font-size:30px;
+}
+
+/* Change background on mouse-over */
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+}	  
+  </style>
+  </head>
+  <body>  
+ <div class="navbar">
+  <a href="#home">Home</a>
+  <a href="#news">News</a>
+  <a href="#contact">Contact</a>
+</div>
+    <div class='sidebar'>
+      <div class='heading'>
+        <a href="mapboxy.html"><h1>PUNK VENUES ACROSS THE GLOBE</h1></a>
+      </div>
+      <div id='listings' class='listings'></div>
+    </div>
+
+    <div id='map' class='map'></div>
+    <script>
+      // This will let you use the .remove() function later on
+      if (!('remove' in Element.prototype)) {
+        Element.prototype.remove = function() {
+          if (this.parentNode) {
+              this.parentNode.removeChild(this);
+          }
+        };
+      }
+
+      mapboxgl.accessToken = 'pk.eyJ1IjoibXZhbmRlbmJ1cmc5MiIsImEiOiJja2U4d2R5dDAyMHhwMnpwOGl6OGs2bmZ3In0.bjkT9KX_g4RVv1voVkvRnw';
+      /**
+       * Add the map to the page
+      */
+      var map = new mapboxgl.Map({
+        container: 'map',
+        /*style: 'mapbox://styles/mapbox/light-v10',*/
+        style: 'mapbox://styles/mvandenburg92/ckgs5yrq014ww19o7leulrghv',
+        center: [-77.034084142948, 38.909671288923],
+        zoom: 13,
+        scrollZoom: true
+      });
+
+      var stores = {
+        "type": "FeatureCollection",
+   "features": [
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -83.379959,33.958309 ]
+    },
+    "properties": {
+    "Name":"40 Watt Club",
+    "Address":"285 W Washington St",
+    "City":"Athens",
+    "State":"GA",
+    "Country":"United States",
+    "Zipcode":30601
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -0.13528,51.51613 ]
+    },
+    "properties": {
+    "Name":"100 Club",
+    "Address":"100 Oxford Street",
+    "City":"London",
+    "State":"",
+    "Country":"United Kingdom",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.299296,37.879505 ]
+    },
+    "properties": {
+    "Name":"924 Gilman Street",
+    "Address":"924 Gilman St",
+    "City":"Berkeley",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":94710
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.983467,40.725892 ]
+    },
+    "properties": {
+    "Name":"A7 (bar)",
+    "Address":"112 Avenue A",
+    "City":"New York",
+    "State":"NY",
+    "Country":"United States",
+    "Zipcode":10009
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.99039,40.720779 ]
+    },
+    "properties": {
+    "Name":"ABC No Rio",
+    "Address":"56 Rivington St ",
+    "City":"NY",
+    "State":"NY",
+    "Country":"United States",
+    "Zipcode":10002
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.428538,41.135416 ]
+    },
+    "properties": {
+    "Name":"The Anthrax",
+    "Address":"25 Perry Avenue",
+    "City":"Norwalk",
+    "State":"CT",
+    "Country":"United States",
+    "Zipcode":6850
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -2.2362478,53.4864743 ]
+    },
+    "properties": {
+    "Name":"Band on the Wall",
+    "Address":"27 Swan St",
+    "City":"Manchester ",
+    "State":"",
+    "Country":"United Kingdom",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.987371,40.284661 ]
+    },
+    "properties": {
+    "Name":"Brighton Bar",
+    "Address":"121 Brighton Ave",
+    "City":"Long Branch",
+    "State":"NJ",
+    "Country":"United States",
+    "Zipcode":7017
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -117.173522,32.73291 ]
+    },
+    "properties": {
+    "Name":"The Casbah (music venue)",
+    "Address":"2812 Kettner Blvd",
+    "City":"San Diego",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":92101
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.991985,40.725176 ]
+    },
+    "properties": {
+    "Name":"CBGB",
+    "Address":"315 Bowery",
+    "City":"New York",
+    "State":"NY",
+    "Country":"United States",
+    "Zipcode":10003
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.0507133,42.3495462 ]
+    },
+    "properties": {
+    "Name":"The Channel (nightclub)",
+    "Address":"25 Necco St",
+    "City":"Boston",
+    "State":"MA",
+    "Country":"United States",
+    "Zipcode":2210
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -76.617547,39.309531 ]
+    },
+    "properties": {
+    "Name":"Charm City Art Space",
+    "Address":"1731 Maryland Ave",
+    "City":"Baltimore",
+    "State":"MD",
+    "Country":"United States",
+    "Zipcode":2120
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -117.2434312,32.8741717 ]
+    },
+    "properties": {
+    "Name":"Ché Café",
+    "Address":"1000 Scholars Dr S",
+    "City":"La Jolla",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":92037
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.400343,37.7956517 ]
+    },
+    "properties": {
+    "Name":"Club Waldorf",
+    "Address":"444 Battery Street",
+    "City":"San Francisco",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":94111
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -117.9318192,33.6300635 ]
+    },
+    "properties": {
+    "Name":"Cuckoo's Nest (nightclub)",
+    "Address":"1714 Placentia Avenue",
+    "City":"Costa Mesa",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.260114,34.077716 ]
+    },
+    "properties": {
+    "Name":"The Echo (venue)",
+    "Address":"1822 Sunset Blvd",
+    "City":"Los Angeles",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90026
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -1.54784,53.802968 ]
+    },
+    "properties": {
+    "Name":"F Club",
+    "Address":"Leeds LS1 3HE",
+    "City":"Leeds",
+    "State":"",
+    "Country":"United Kingdom",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.563069,45.510994 ]
+    },
+    "properties": {
+    "Name":"Les Foufounes Électriques",
+    "Address":"87 St Catherine St E",
+    "City":"Montreal",
+    "State":"Quebec H2X 1K5",
+    "Country":"Canada",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.9918594,40.725893 ]
+    },
+    "properties": {
+    "Name":"The Great Gildersleeves",
+    "Address":"331 Bowery",
+    "City":"New York City",
+    "State":"NY",
+    "Country":"United States",
+    "Zipcode":10003
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.128118,42.35248 ]
+    },
+    "properties": {
+    "Name":"Harpers Ferry (nightclub)",
+    "Address":"58 Brighton Avenue",
+    "City":"Allston",
+    "State":"MA",
+    "Country":"United States",
+    "Zipcode":2134
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.237138,34.065559 ]
+    },
+    "properties": {
+    "Name":"Hong Kong Café",
+    "Address":"425 Gin Ling Way",
+    "City":"Los Angeles",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90012
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.2618581,37.8397563 ]
+    },
+    "properties": {
+    "Name":"IMusicast",
+    "Address":"5429 Telegraph Ave",
+    "City":"Oakland",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":94609
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.321793,34.047513 ]
+    },
+    "properties": {
+    "Name":"Jabberjaw (Los Angeles)",
+    "Address":"3711 W Pico Blvd",
+    "City":"Los Angeles",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90019
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -90.21862,38.594133 ]
+    },
+    "properties": {
+    "Name":"Lemp Neighborhood Arts Center",
+    "Address":"3301 Lemp Ave",
+    "City":"St. Louis",
+    "State":"MO",
+    "Country":"United States",
+    "Zipcode":63118
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.796333,36.155339 ]
+    },
+    "properties": {
+    "Name":"Lucy's Record Shop",
+    "Address":"1707 Church St.",
+    "City":"Nashville",
+    "State":"Tennessee",
+    "Country":"United States",
+    "Zipcode":37203
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.404499,37.797891 ]
+    },
+    "properties": {
+    "Name":"Mabuhay Gardens",
+    "Address":"443 Broadway",
+    "City":"San Francisco",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":94133
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.335145,34.101122 ]
+    },
+    "properties": {
+    "Name":"The Masque (venue)",
+    "Address":"1655 North Cherokee Avenue",
+    "City":"Los Angeles",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90028
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -73.98846,40.736698 ]
+    },
+    "properties": {
+    "Name":"Max's Kansas City",
+    "Address":"213 Park Ave St",
+    "City":"New York",
+    "State":"NY",
+    "Country":"United States",
+    "Zipcode":10003
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.10153,42.363618 ]
+    },
+    "properties": {
+    "Name":"The Middle East (nightclub)",
+    "Address":"472-480 Massachusetts Ave",
+    "City":"Cambridge",
+    "State":"MA",
+    "Country":"United States",
+    "Zipcode":2139
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -79.942511,40.464702 ]
+    },
+    "properties": {
+    "Name":"Mr. Roboto Project",
+    "Address":"5106 Penn Ave",
+    "City":"Pittsburgh",
+    "State":"PA",
+    "Country":"United States",
+    "Zipcode":15224
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -74.002409,40.717625 ]
+    },
+    "properties": {
+    "Name":"Mudd Club",
+    "Address":"77 White St",
+    "City":"New York",
+    "State":"NY",
+    "Country":"United States",
+    "Zipcode":10013
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.640579,41.925054 ]
+    },
+    "properties": {
+    "Name":"Neo (nightclub)",
+    "Address":"2350 N Clark St",
+    "City":"Chicago",
+    "State":"IL",
+    "Country":"United States",
+    "Zipcode":60614
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -89.376828,43.076021 ]
+    },
+    "properties": {
+    "Name":"O'Cayz Corral",
+    "Address":"504 E Wilson St",
+    "City":"Madison",
+    "State":"WI",
+    "Country":"United States",
+    "Zipcode":53703
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 144.977084,-37.798363 ]
+    },
+    "properties": {
+    "Name":"The Old Bar",
+    "Address":"74-76 Johnston St",
+    "City":"Fitzroy ",
+    "State":"",
+    "Country":"Australia",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.096222,42.348516 ]
+    },
+    "properties": {
+    "Name":"The Rathskeller",
+    "Address":"528 Commonwealth Ave",
+    "City":"Boston",
+    "State":"MA",
+    "Country":"United States",
+    "Zipcode":2215
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -97.741473,30.291548 ]
+    },
+    "properties": {
+    "Name":"Raul's (night club)",
+    "Address":"2610 Guadalupe St",
+    "City":"Austin",
+    "State":"TX",
+    "Country":"United States",
+    "Zipcode":78705
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.354387,34.098201 ]
+    },
+    "properties": {
+    "Name":"Rodney Bingenheimer's English Disco",
+    "Address":"7561 Sunset Blvd",
+    "City":"Los Angeles",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90046
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.226544,34.04746 ]
+    },
+    "properties": {
+    "Name":"Self Help Graphics & Art",
+    "Address":"1300 E 1st St",
+    "City":"Los Angeles",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90033
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.245421,34.050251 ]
+    },
+    "properties": {
+    "Name":"The Smell",
+    "Address":"247 S Main St",
+    "City":"Los Angeles",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90012
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 13.422218,52.500341 ]
+    },
+    "properties": {
+    "Name":"SO36",
+    "Address":"Oranienstraße 190",
+    "City":"Berlin",
+    "State":"",
+    "Country":"Germany",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.411833,37.783365 ]
+    },
+    "properties": {
+    "Name":"Sound of Music (punk club)",
+    "Address":"162 Turk St",
+    "City":"San Francisco",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":94102
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.366648,34.091091 ]
+    },
+    "properties": {
+    "Name":"Starwood (nightclub)",
+    "Address":"8151 Santa Monica Blvd",
+    "City":"West Hollywood",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90046
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.624261,45.534054 ]
+    },
+    "properties": {
+    "Name":"The Know (Portland, Oregon)",
+    "Address":"3728 NE Sandy Blvd",
+    "City":"Portland",
+    "State":"OR",
+    "Country":"United States",
+    "Zipcode":97232
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -74.003043,40.718189 ]
+    },
+    "properties": {
+    "Name":"Tier 3",
+    "Address":"West Broadway & White Street",
+    "City":"New York",
+    "State":"NY",
+    "Country":"United States",
+    "Zipcode":10013
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 144.9433,-37.8437919 ]
+    },
+    "properties": {
+    "Name":"The Tote Hotel",
+    "Address":"71 Johnston St Port ",
+    "City":"Melbourne",
+    "State":"",
+    "Country":"Australia",
+    "Zipcode":null
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -93.24725,44.961225 ]
+    },
+    "properties": {
+    "Name":"Triple Rock Social Club",
+    "Address":"629 Cedar Ave",
+    "City":"Minneapolis",
+    "State":"MN",
+    "Country":"United States",
+    "Zipcode":55454
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.421294,37.75707 ]
+    },
+    "properties": {
+    "Name":"Valencia Tool & Die",
+    "Address":"974 Valencia St",
+    "City":"San Francisco",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":94110
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.428475,37.751642 ]
+    },
+    "properties": {
+    "Name":"Warm Water Cove",
+    "Address":"300 24th St",
+    "City":"San Francisco",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":94107
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -118.385512,34.09064 ]
+    },
+    "properties": {
+    "Name":"Whiskey A Go Go",
+    "Address":"8901 Sunset Blvd",
+    "City":"West Hollywood",
+    "State":"CA",
+    "Country":"United States",
+    "Zipcode":90069
+    }
+  }
+]
+};
+      
+      /**
+       * Assign a unique id to each store. You'll use this `id`
+       * later to associate each point on the map with a listing
+       * in the sidebar.
+      */
+      stores.features.forEach(function(store, i){
+        store.properties.id = i;
+      });
+
+      /**
+       * Wait until the map loads to make changes to the map.
+      */
+      map.on('load', function (e) {
+        /**
+         * This is where your '.addLayer()' used to be, instead
+         * add only the source without styling a layer
+        */
+        map.addSource("places", {
+          "type": "geojson",
+          "data": stores
+        });
+
+        /**
+         * Add all the things to the page:
+         * - The location listings on the side of the page
+         * - The markers onto the map
+        */
+        buildLocationList(stores);
+        addMarkers();
+      });
+
+      /**
+       * Add a marker to the map for every store listing.
+      **/
+      function addMarkers() {
+        /* For each feature in the GeoJSON object above: */
+        stores.features.forEach(function(marker) {
+          /* Create a div element for the marker. */
+          var el = document.createElement('div');
+          /* Assign a unique `id` to the marker. */
+          el.id = "marker-" + marker.properties.id;
+          /* Assign the `marker` class to each marker for styling. */
+          el.className = 'marker';
+          
+          /**
+           * Create a marker using the div element
+           * defined above and add it to the map.
+          **/
+          new mapboxgl.Marker(el, { offset: [0, -23] })
+            .setLngLat(marker.geometry.coordinates)
+            .addTo(map);
+
+          /**
+           * Listen to the element and when it is clicked, do three things:
+           * 1. Fly to the point
+           * 2. Close all other popups and display popup for clicked store
+           * 3. Highlight listing in sidebar (and remove highlight for all other listings)
+          **/
+          el.addEventListener('click', function(e){
+            /* Fly to the point */
+            flyToStore(marker);
+            /* Close all other popups and display popup for clicked store */
+            createPopUp(marker);
+            /* Highlight listing in sidebar */
+            var activeItem = document.getElementsByClassName('active');
+            e.stopPropagation();
+            if (activeItem[0]) {
+              activeItem[0].classList.remove('active');
+            }
+            var listing = document.getElementById('listing-' + marker.properties.id);
+            listing.classList.add('active');
+          });
+        });
+      }
+
+      /**
+       * Add a listing for each store to the sidebar.
+      **/
+      function buildLocationList(data) {
+        data.features.forEach(function(store, i){
+          /**
+           * Create a shortcut for `store.properties`,
+           * which will be used several times below.
+          **/
+          var prop = store.properties;
+
+          /* Add a new listing section to the sidebar. */
+          var listings = document.getElementById('listings');
+          var listing = listings.appendChild(document.createElement('div'));
+          /* Assign a unique `id` to the listing. */
+          listing.id = "listing-" + prop.id;
+          /* Assign the `item` class to each listing for styling. */
+          listing.className = 'item';
+
+          /* Add the link to the individual listing created above. */
+          var link = listing.appendChild(document.createElement('a'));
+          link.href = '#';
+          link.className = 'title';
+          link.id = "link-" + prop.id;
+          link.innerHTML = prop.Name;
+
+          /* Add details to the individual listing. */
+          var details = listing.appendChild(document.createElement('div'));
+          details.innerHTML = prop.Address + ' · ' + prop.City + ' · ' + prop.Country;
+
+          /**
+           * Listen to the element and when it is clicked, do four things:
+           * 1. Update the `currentFeature` to the store associated with the clicked link
+           * 2. Fly to the point
+           * 3. Close all other popups and display popup for clicked store
+           * 4. Highlight listing in sidebar (and remove highlight for all other listings)
+          **/
+          link.addEventListener('click', function(e){
+            for (var i=0; i < data.features.length; i++) {
+              if (this.id === "link-" + data.features[i].properties.id) {
+                var clickedListing = data.features[i];
+                flyToStore(clickedListing);
+                createPopUp(clickedListing);
+              }
+            }
+            var activeItem = document.getElementsByClassName('active');
+            if (activeItem[0]) {
+              activeItem[0].classList.remove('active');
+            }
+            this.parentNode.classList.add('active');
+          });
+        });
+      }
+
+      /**
+       * Use Mapbox GL JS's `flyTo` to move the camera smoothly
+       * a given center point.
+      **/
+      function flyToStore(currentFeature) {
+        map.flyTo({
+          center: currentFeature.geometry.coordinates,
+          zoom: 15,
+          speed: 0.8,
+          curve: 1,
+          easing(t) {
+          return t;
+          }
+        });
+      }
+      
+        map.addControl(new mapboxgl.NavigationControl());
+        map.setBearing(45);
+        map.setPitch(60);
+
+      /**
+       * Create a Mapbox GL JS `Popup`.
+      **/
+      function createPopUp(currentFeature) {
+        var popUps = document.getElementsByClassName('mapboxgl-popup');
+        if (popUps[0]) popUps[0].remove();
+        var popup = new mapboxgl.Popup({closeOnClick: false})
+          .setLngLat(currentFeature.geometry.coordinates)
+          .setHTML('<h3>' + currentFeature.properties.Name +'</h3>' +
+            '<h4>' + currentFeature.properties.Address + '</h4>')
+          .addTo(map);
+      }
+    </script>
+  </body>
+</html>
