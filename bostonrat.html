@@ -34,6 +34,11 @@
         overflow:hidden;
         border-right:1px solid rgba(0,0,0,0.25);
       }
+      article {
+        width:75.3333%;;
+        margin-left: auto;
+        margin-right: auto;
+      }
       .pad2 {
         padding:20px;
       }
@@ -235,7 +240,35 @@
    <div class='heading'>
      <a href="punkvenues.html"><h1>RATS AROUND BOSTON, MASS</h1></a>
    </div>
-   <div id='listings' class='listings'></div>
+   <div id='listings' class='listings'>
+<article>
+  <h2> Brief Explanation of the events for this weeks Lab </h2>
+<p>Over the last three weeks, we’ve learned about setting up web pages,
+  embedding maps, and building our own maps with increasing functionality.
+   In all of the previous studios, we’ve had starter code for you to work with.
+    This week you’ll be bringing all of your new technical skills together by
+     creating your own HTML files and a series of maps they will contain.
+     This week we will also be focusing more on data sources for your maps.
+     Up to this point, we’ve been creating basic geometry by including it
+     <em>within</em> the code of our page or by altering map tiles.
+     This week, our code will be referencing data that we host from a variety of sources.</p>
+
+
+<p>Map that uses hosted GeoJSON files for data. It’s time to map some rats!
+  Follow this fantastic Leaflet tutorial for a <a href="http://maptimeboston.github.io/leaflet-intro/" rel="nofollow">Boston Rat Map</a> (<a href="https://github.com/maptimeBoston/leaflet-intro">
+    the repo for it is here</a>).
+
+    It's quite easy to follow and covers downloading data, basic geographic
+    features, styling, and interactivity. However, it uses an outdated version
+    of some Leaflets libraries, which won’t render on Github pages.
+    So, you’ll need to see <a href="https://github.com/Shadrock/first-leaflet-map">this Github repo</a>
+     to learn about which lines of code to replace. I suggest you read through
+      this repo first, to get an idea of where you’ll need to replace things,
+      and keep it open as you work through the Rat Map tutorial. Be on the
+      lookout for a "secret challenge" this week.
+      Here's a hint: <a href="https://www.e-education.psu.edu/maps/l5_p5.html" rel="nofollow">"rainbow" color ramps in maps are extremely problematic</a>...
+      be on the lookout for them and possible alternatives.</p> </article>
+    </div>
  </div>
  <div id='map' class='map'></div>
     <script>
@@ -257,9 +290,16 @@
   }).addTo(map);
   // load GeoJSON from an external file
   $.getJSON("../rodents.geojson",function(data){
-    // add GeoJSON layer to the map once the file is loaded
-    L.geoJson(data).addTo(map);
+    var ratIcon = L.icon({
+    iconUrl: 'rat.gif',
+    iconSize: [50,40]
   });
+  L.geoJson(data  ,{
+    pointToLayer: function(feature,latlng){
+	  return L.marker(latlng,{icon: ratIcon});
+    }
+  }).addTo(map);
+});
    </script>
 </body>
 </html>
