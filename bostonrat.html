@@ -6,49 +6,26 @@
     <meta name='robots' content='noindex, nofollow'>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
-    
-    
-   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    
-    
-    
-    
-    
-    
-    <style>
-       #map{ height: 100% }
-       
-       
-       
-    <style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
       body {
         color:#404040;
-        font:400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+        font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
         margin-top: 100px;
- 	margin-bottom: 100px;
-        padding:0;
-        -webkit-font-smoothing:antialiased;
-      }
-	        list-style: none;
-}
-      /*.navbar {
-      margin-bottom: 0;
-	    }*/
-    * {
-        -webkit-box-sizing:border-box;
-        -moz-box-sizing:border-box;
-        box-sizing:border-box;
-      }
+ 	      margin-bottom: 100px;
+        padding:0;}
+
       @font-face {
       font-family: 'All Ages';
       src: url('../fonts/AllAgesDemo-2DPX.ttf');
-      src: url('../fonts/AllAgesDemoBold-vX1L.ttf') format('truetype'), 
-        url('../fonts/AllAgesDemoBoldItalic-wgR9.ttf') format('truetype'); 
+      src: url('../fonts/AllAgesDemoBold-vX1L.ttf') format('truetype'),
+        url('../fonts/AllAgesDemoBoldItalic-wgR9.ttf') format('truetype');
       }
-	
+
       .sidebar {
         position:absolute;
         width:33.3333%;
@@ -66,8 +43,8 @@
         left:33.3333%;
         width:66.6666%;
         top:0;bottom:0;
-	margin-top:80px;
-	border-top:10px solid white;
+	      margin-top:80px;
+	      border-top:10px solid white;
       }
 
       h1 {
@@ -97,7 +74,9 @@
         padding:10px 10px;
         text-align: center;
         background-color: #03254c;
-        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSrhvQQJE6t028eU1lLjEguZs25ye3DUdFHsQ&usqp=CAU");
+        background-image: url("https://www.oxygen.com/sites/oxygen/files/styles/blog-post-embedded--mobile-1_5x/public/smiley-face-killers-boston-drownings.png?itok=JHB4-QVv");
+        /* https://blog.homes.com/wp-content/uploads/sites/2/2017/10/boston.jpg"); */
+        /* https://blog.homes.com/wp-content/uploads/sites/2/2017/10/boston.jpg */
       }
 
       .listings {
@@ -108,7 +87,7 @@
 
       .listings .item {
         display:block;
-        border-bottom:1px solid #eee; 
+        border-bottom:1px solid #eee;
         padding:15px;
         padding-left:20px;
         text-decoration:none;
@@ -225,9 +204,9 @@
         top: 0; /* Position the navbar at the top of the page */
         width: 100%; /* Full width */
         border-left:10px solid black;
-        border-bottom:10px solid white; 
+        border-bottom:10px solid white;
         border-right:10px solid black;
-      }
+        background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)),url("https://media.gettyimages.com/vectors/massachusetts-map-on-grunge-canvas-background-vector-id516178772?s=612x612");        }
       .navbar a {
         float: right;
         display: block;
@@ -243,21 +222,44 @@
         background: #ddd;
         color: black;
         padding-left: 12%;
-      }	  
+      }
   </style>
  </head>
-  <body>  
+<body>
  <div class="navbar">
   <a href="punkvenues.html">Punk Venues</a>
   <a href="#news">News</a>
   <a href="bostonrat.html">Boston Rat Pack</a>
 </div>
-    <div class='sidebar'>
-      <div class='heading'>
-        <a href="punkvenues.html"><h1>PUNK VENUES ACROSS THE GLOBE</h1></a>
-      </div>
-      <div id='listings' class='listings'></div>
-    </div>
-
-    <div id='map' class='map'></div>
+<div class='sidebar'>
+   <div class='heading'>
+     <a href="punkvenues.html"><h1>RATS AROUND BOSTON, MASS</h1></a>
+   </div>
+   <div id='listings' class='listings'></div>
+ </div>
+ <div id='map' class='map'></div>
     <script>
+    // initialize the map
+    var map = L.map('map').setView([42.35, -71.08], 13);
+
+ // load a tile layer
+    L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+   {
+     attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
+     maxZoom: 17,
+     minZoom: 9
+   }).addTo(map);
+   // bike lanes
+  L.tileLayer('http://tiles.mapc.org/trailmap-onroad/{z}/{x}/{y}.png',
+  {
+    maxZoom: 17,
+    minZoom: 9
+  }).addTo(map);
+  // load GeoJSON from an external file
+  $.getJSON("../rodents.geojson",function(data){
+    // add GeoJSON layer to the map once the file is loaded
+    L.geoJson(data).addTo(map);
+  });
+   </script>
+</body>
+</html>

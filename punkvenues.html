@@ -6,7 +6,7 @@
     <meta name='robots' content='noindex, nofollow'>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
     <style>
@@ -31,10 +31,10 @@
       @font-face {
       font-family: 'All Ages';
       src: url('../fonts/AllAgesDemo-2DPX.ttf');
-      src: url('../fonts/AllAgesDemoBold-vX1L.ttf') format('truetype'), 
-        url('../fonts/AllAgesDemoBoldItalic-wgR9.ttf') format('truetype'); 
+      src: url('../fonts/AllAgesDemoBold-vX1L.ttf') format('truetype'),
+        url('../fonts/AllAgesDemoBoldItalic-wgR9.ttf') format('truetype');
       }
-	
+
       .sidebar {
         position:absolute;
         width:33.3333%;
@@ -94,7 +94,7 @@
 
       .listings .item {
         display:block;
-        border-bottom:1px solid #eee; 
+        border-bottom:1px solid #eee;
         padding:15px;
         padding-left:20px;
         text-decoration:none;
@@ -211,8 +211,10 @@
   top: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
   border-left:10px solid black;
-  border-bottom:10px solid white; 
+  border-bottom:10px solid white;
   border-right:10px solid black;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)),url("https://media.gettyimages.com/vectors/massachusetts-map-on-grunge-canvas-background-vector-id516178772?s=612x612"); 
+
 }
 .navbar a {
   float: right;
@@ -229,10 +231,10 @@
   background: #ddd;
   color: black;
   padding-left: 12%;
-}	  
+}
   </style>
   </head>
-  <body>  
+  <body>
  <div class="navbar">
   <a href="punkvenues.html">Punk Venues</a>
   <a href="#news">News</a>
@@ -1009,7 +1011,7 @@
   }
 ]
 };
-      
+
       /**
        * Assign a unique id to each store. You'll use this `id`
        * later to associate each point on the map with a listing
@@ -1053,7 +1055,7 @@
           el.id = "marker-" + marker.properties.id;
           /* Assign the `marker` class to each marker for styling. */
           el.className = 'marker';
-          
+
           /**
            * Create a marker using the div element
            * defined above and add it to the map.
@@ -1154,7 +1156,7 @@
           }
         });
       }
-      
+
         map.addControl(new mapboxgl.NavigationControl());
         map.setBearing(45);
         map.setPitch(60);
