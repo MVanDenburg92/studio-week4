@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title></title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+  <script src='https://npmcdn.com/csv2geojson@latest/csv2geojson.js'></script>
+  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+
+    body {
+      color:#404040;
+      font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+      margin-top: 100px;
+      margin-bottom: 100px;
+      padding:0;}
+
+    @font-face {
+    font-family: 'All Ages';
+    src: url('../fonts/AllAgesDemo-2DPX.ttf');
+    src: url('../fonts/AllAgesDemoBold-vX1L.ttf') format('truetype'),
+      url('../fonts/AllAgesDemoBoldItalic-wgR9.ttf') format('truetype');
+    }
+
+    .sidebar {
+      position:absolute;
+      width:33.3333%;
+      height:100%;
+      top:0;left:0;
+      overflow:hidden;
+      border-right:1px solid rgba(0,0,0,0.25);
+    }
+    article {
+      width:75.3333%;;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pad2 {
+      padding:20px;
+    }
+
+    .map {
+      position:absolute;
+      left:33.3333%;
+      width:66.6666%;
+      top:0;bottom:0;
+      margin-top:80px;
+      border-top:10px solid white;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size:40px;
+      margin:0;
+      font-weight:400;
+      line-height: 40px;
+      padding: 15px 10px;
+      color: white;
+    }
+
+    a {
+      color:#404040;
+      text-decoration:none;
+    }
+
+    a:hover {
+      color:#101010;
+    }
+
+    .heading {
+      background:#fff;
+      border-left:10px solid black;border-bottom:10px solid white; border-right:10px solid black;
+      min-height:60px;
+      line-height:80px;
+      padding:10px 10px;
+      text-align: center;
+      background-size: contain;
+      background-color: #03254c;
+      background-image:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)), url("https://i.pinimg.com/originals/07/93/91/07939154b8097a615dd73d2844b52514.jpg");
+      /* https://blog.homes.com/wp-content/uploads/sites/2/2017/10/boston.jpg"); */
+      /* https://blog.homes.com/wp-content/uploads/sites/2/2017/10/boston.jpg */
+    }
+
+    .listings {
+      height:100%;
+      overflow:auto;
+      padding-bottom:60px;
+    }
+
+    .listings .item {
+      display:block;
+      border-bottom:1px solid #eee;
+      padding:15px;
+      padding-left:20px;
+      text-decoration:none;
+    }
+
+    .listings .item:last-child { border-bottom:none; padding-bottom:200px;}
+    .listings .item .title {
+      display:block;
+      color:#03254c;
+      font-weight:700;
+    }
+
+    .listings .item .title small { font-weight:400; }
+    .listings .item.active .title,
+    .listings .item .title:hover { color:#03254c; }
+    .listings .item.active {
+      background-color:#f8f8f8;
+    }
+    ::-webkit-scrollbar {
+      width:3px;
+      height:3px;
+      border-left:0;
+      background:rgba(0,0,0,0.1);
+    }
+    ::-webkit-scrollbar-track {
+      background:none;
+    }
+    ::-webkit-scrollbar-thumb {
+      background:#03254c;
+      border-radius:0;
+    }
+
+    .navbar {
+      overflow: hidden;
+      background-color: #333;
+      position: fixed; /* Set the navbar to fixed position */
+      top: 0; /* Position the navbar at the top of the page */
+      width: 100%; /* Full width */
+      border-left:10px solid black;
+      border-bottom:10px solid white;
+      border-right:10px solid black;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)),url("https://media.gettyimages.com/vectors/massachusetts-map-on-grunge-canvas-background-vector-id516178772?s=612x612");        }
+    .navbar a {
+      float: right;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 30px 16px;
+      text-decoration: none;
+      padding-right: 10%; font-size:30px;
+    }
+
+    /* Change background on mouse-over */
+    .navbar a:hover {
+      background: #ddd;
+      color: black;
+      padding-left: 12%;
+    }
+    /* Popup styling */
+
+    .mapboxgl-popup {
+      padding-bottom: 5px;
+    }
+
+    .mapboxgl-popup-close-button {
+      display: none;
+    }
+
+    .mapboxgl-popup-content {
+      font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+      padding: 0;
+      width: 250px;
+    }
+
+    .mapboxgl-popup-content-wrapper {
+      padding: 1%;
+    }
+
+    .mapboxgl-popup-content h3 {
+      background: rgb(61, 59, 59);
+      text-align: center;
+      color: #fff;
+      margin: 0;
+      display: block;
+      padding: 15px;
+      font-weight: 700;
+      margin-top: -5px;
+    }
+
+    .mapboxgl-popup-content h4 {
+      margin: 0;
+      display: block;
+      padding: 10px 3px 10px 10px;
+      font-weight: 400;
+    }
+
+    .mapboxgl-container {
+      cursor: pointer;
+    }
+
+    .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
+      margin-top: 3px;
+    }
+
+    .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
+      border-bottom-color: rgb(61, 59, 59);
+    }
+    .marker {
+      /*border: 2px solid;*/
+      cursor: pointer;
+      height:80px;
+      width:80px;
+      background-size: contain;
+      /*margin-left: 28px;*/
+      /*https://ih1.redbubble.net/image.372813300.2775/flat,128x128,075,f-pad,128x128,f8f8f8.u2.jpg*/
+      /*https://images.vexels.com/media/users/3/145801/isolated/lists/0678bf44860bd04584f32be273e1fe2b-punk-logo.png*/
+      background-image: url("https://cdn0.iconfinder.com/data/icons/punk-rock/64/hand-rock-punk-heavy-512.png");
+      /*background-color: rgba(0, 0, 0, 0);*/
+    }
+  </style>
+</head>
+
+<body>
+ <div class="navbar">
+  <a href="punkvenues.html">Punk Venues</a>
+  <a href="punkbandswiki.html">Punk Bands</a>
+  <a href="bostonrat.html">Boston Rat Pack</a>
+</div>
+<div class='sidebar'>
+   <div class='heading'>
+     <a href="punkbandswiki.html"><h1>PUNK BANDS ACROSS THE WORLD</h1></a>
+   </div>
+   <div id='listings' class='listings'>
+<article>
+  <h2>Google Sheet Based Map</h2>
+<p>For this particular map, I used a Google sheet for sourcing the point data. Throughout the Web Mapping and Open Source GIS course, we’ve talked
+  about how many international development or humanitarian organizations use
+  spreadsheets as the fundamental format for data within their organizations.
+   This map is a natural progression of our conversations and as such, we create a web map that uses a
+   spreadsheet as its data source. There are instructions in this tutorial for hosting the map on Github:
+   <a href="https://github.com/MVanDenburg92/studio-week4">Github Assignment Page</a></p>
+
+
+<p>Map that uses hosted GeoJSON files for data. It’s time to map some bands!
+    </div>
+ </div>
+ <div id='map' class='map'></div>
+  <script>
+
+      var transformRequest = (url, resourceType) => {
+        var isMapboxRequest =
+          url.slice(8, 22) === "api.mapbox.com" ||
+          url.slice(10, 26) === "tiles.mapbox.com";
+        return {
+          url: isMapboxRequest
+            ? url.replace("?", "?pluginName=sheetMapper&")
+            : url
+        };
+      };
+      //YOUR TURN: add your Mapbox token
+      mapboxgl.accessToken = 'pk.eyJ1IjoibXZhbmRlbmJ1cmc5MiIsImEiOiJja2U4d2R5dDAyMHhwMnpwOGl6OGs2bmZ3In0.bjkT9KX_g4RVv1voVkvRnw'; //Mapbox token
+      var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/light-v10', //stylesheet location
+        center: [-122.411464, 37.7852299], // starting position
+        zoom: 10,// starting zoom
+        transformRequest: transformRequest
+      });
+
+      $(document).ready(function () {
+        $.ajax({
+          type: "GET",
+          //YOUR TURN: Replace with csv export link
+          url: 'https://docs.google.com/spreadsheets/d/1qE41GL2H8xQKINqbdM7LuP49zA441uMWYrLq0jRSBVs/gviz/tq?tqx=out:csv&sheet=PunkBandsWIki',
+          dataType: "text",
+          success: function (csvData) { makeGeoJSON(csvData); }
+        });
+
+
+
+        function makeGeoJSON(csvData) {
+          csv2geojson.csv2geojson(csvData, {
+            latfield: 'Latitude',
+            lonfield: 'Longitude',
+            delimiter: ','
+          }, function (err, data) {
+            map.on('load', function () {
+
+              //Add the the layer to the map
+              map.addLayer({
+                'id': 'csvData',
+                'type': 'circle',
+                'source': {
+                  'type': 'geojson',
+                  'data': data
+                },
+
+              });
+
+
+              // When a click event occurs on a feature in the csvData layer, open a popup at the
+              // location of the feature, with description HTML from its properties.
+              map.on('click', 'csvData', function (e) {
+                var coordinates = e.features[0].geometry.coordinates.slice();
+
+
+                //set popup text
+                //You can adjust the values of the popup to match the headers of your CSV.
+                // For example: e.features[0].properties.Name is retrieving information from the field Name in the original CSV.
+                var description = `<h3>` + e.features[0].properties.Band_Name + `</h3>` + `<h4>` + `<b>` + `Origin: ` + `</b>` +
+                e.features[0].properties.Origin + `</h4>` + `<h4>` + `<b>` + `Years Active: ` + `</b>` + e.features[0].properties.Years_Active + `</h4>` +
+                `<h4>` + `<b>` + `Notes: ` + `</b>` + e.features[0].properties.Notes + `</h4>`;
+
+                // Ensure that if the map is zoomed out such that multiple
+                // copies of the feature are visible, the popup appears
+                // over the copy being pointed to.
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+
+                //add Popup to map
+
+                new mapboxgl.Popup()
+                  .setLngLat(coordinates)
+                  .setHTML(description)
+                  .addTo(map)
+                  .addMarkers();
+              });
+
+
+
+              function addMarkers() {
+              data.features.forEach(function(marker) {
+                /* Create a div element for the marker. */
+                var el = document.createElement('div');
+                /* Assign a unique `id` to the marker. */
+                el.id = "marker-" + marker.properties.id;
+                /* Assign the `marker` class to each marker for styling. */
+                el.className = 'marker';
+
+                /**
+                 * Create a marker using the div element
+                 * defined above and add it to the map.
+                **/
+                new mapboxgl.Marker(el, { offset: [0, -23] })
+                  .setLngLat(marker.geometry.coordinates)
+                  .addTo(map);
+
+                /**
+                 * Listen to the element and when it is clicked, do three things:
+                 * 1. Fly to the point
+                 * 2. Close all other popups and display popup for clicked store
+                 * 3. Highlight listing in sidebar (and remove highlight for all other listings)
+                **/
+                el.addEventListener('click', function(e){
+                  /* Fly to the point */
+                  flyToStore(marker);
+                  /* Close all other popups and display popup for clicked store */
+                  createPopUp(marker);
+                  /* Highlight listing in sidebar */
+                  var activeItem = document.getElementsByClassName('active');
+                  e.stopPropagation();
+                  if (activeItem[0]) {
+                    activeItem[0].classList.remove('active');
+                  }
+                  var listing = document.getElementById('listing-' + marker.properties.id);
+                  listing.classList.add('active');
+                });
+              });
+              }
+
+              // Change the cursor to a pointer when the mouse is over the places layer.
+              map.on('mouseenter', 'csvData', function () {
+                map.getCanvas().style.cursor = 'pointer';
+              });
+
+              // Change it back to a pointer when it leaves.
+              map.on('mouseleave', 'places', function () {
+                map.getCanvas().style.cursor = '';
+              });
+
+              var bbox = turf.bbox(data);
+              map.fitBounds(bbox, { padding: 50 });
+
+            });
+
+          });
+        };
+      });
+
+  </script>
+
+</body>
+
+</html>
