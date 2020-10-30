@@ -9,6 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+    type="text/css"
+    />
+
     <style>
       body {
         color:#404040;
@@ -170,10 +178,11 @@ background-image:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)), url("h
         margin:0;
         display:block;
         padding:20px;
+        text-align: center;
         border-radius:3px 3px 0 0;
         font-weight:700;
         margin-top:-15px;
-        background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), url('https://i.ytimg.com/vi/quwZVI5EAxA/maxresdefault.jpg');
+        background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://i.pinimg.com/originals/6c/e3/60/6ce3607cb0eab1412d99d061ec5a2e83.jpg');
           /*url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/cfaeac99-505b-4ca4-ab3b-fca1f1bb69e1/d11c2gl-f200386d-cd8f-40d4-a516-067623b693e1.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvY2ZhZWFjOTktNTA1Yi00Y2E0LWFiM2ItZmNhMWYxYmI2OWUxXC9kMTFjMmdsLWYyMDAzODZkLWNkOGYtNDBkNC1hNTE2LTA2NzYyM2I2OTNlMS5qcGcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.xcfwKro1ClDDmusWfB-A3NTmF8OmPUKXOw3R0zs40q0");*/
           /*https://previews.123rf.com/images/kentoh/kentoh0901/kentoh090100100/4081623-green-punk-rock-emo-grunge-style-background.jpg*/
           /*Cheetah print https://ih1.redbubble.net/image.765635979.9861/flat,750x1000,075,f.u2.jpg */
@@ -1156,6 +1165,7 @@ background-image:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)), url("h
         });
       }
 
+        map.addControl(new MapboxGeocoder({accessToken: mapboxgl.accessToken, mapboxgl: mapboxgl}));
         map.addControl(new mapboxgl.NavigationControl());
         map.setBearing(45);
         map.setPitch(60);
