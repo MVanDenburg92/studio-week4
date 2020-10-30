@@ -5,14 +5,24 @@
     <title>Boston Rat Pack</title>
     <meta name='robots' content='noindex, nofollow'>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" /> <!-- replaces <link rel="stylesheet" href="./Leaflet-1.0.3/leaflet.css"/> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" /> <!-- these both replace <script src="./Leaflet.markercluster-1.0.5/leaflet.markercluster.js"></script> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+    <!-- Adding Leaflet JavaScript file -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script> <!-- reaplaces <script src="./Leaflet-1.0.3/leaflet.js"></script> -->
+    <!-- Adding JavaScript library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> <!-- reaplaces <script src="jquery-2.1.1.min.js"></script> -->
+    <script src="../leaflet-heat.js"></script> <!-- reaplaces <script src="./Leaflet.heat-0.2.0/leaflet-heat.js"></script> with leaflet-heat.js file in repo -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script> <!-- reaplaces <script src="./Leaflet.markercluster-1.0.5/leaflet.markercluster.js"></script>  -->
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="./leaflet-heat.js"></script>
+
+
+
+
+
+
+
 
 <style>
       body {
@@ -232,71 +242,71 @@
         padding-left: 12%;
       }
       .marker-cluster-small {
-	background-color: rgba(181, 226, 140, 0.6);
-	}
-.marker-cluster-small div {
-	background-color: rgba(110, 204, 57, 0.6);
-	}
+    	background-color: rgba(181, 226, 140, 0.6);
+    	}
+    .marker-cluster-small div {
+    	background-color: rgba(110, 204, 57, 0.6);
+    	}
 
-.marker-cluster-medium {
-	background-color: rgba(241, 211, 87, 0.6);
-	}
-.marker-cluster-medium div {
-	background-color: rgba(240, 194, 12, 0.6);
-	}
+    .marker-cluster-medium {
+    	background-color: rgba(241, 211, 87, 0.6);
+    	}
+    .marker-cluster-medium div {
+    	background-color: rgba(240, 194, 12, 0.6);
+    	}
 
-.marker-cluster-large {
-	background-color: rgba(253, 156, 115, 0.6);
-	}
-.marker-cluster-large div {
-	background-color: rgba(241, 128, 23, 0.6);
-	}
+    .marker-cluster-large {
+    	background-color: rgba(253, 156, 115, 0.6);
+    	}
+    .marker-cluster-large div {
+    	background-color: rgba(241, 128, 23, 0.6);
+    	}
 
-	/* IE 6-8 fallback colors */
-.leaflet-oldie .marker-cluster-small {
-	background-color: rgb(181, 226, 140);
-	}
-.leaflet-oldie .marker-cluster-small div {
-	background-color: rgb(110, 204, 57);
-	}
+    	/* IE 6-8 fallback colors */
+    .leaflet-oldie .marker-cluster-small {
+    	background-color: rgb(181, 226, 140);
+    	}
+    .leaflet-oldie .marker-cluster-small div {
+    	background-color: rgb(110, 204, 57);
+    	}
 
-.leaflet-oldie .marker-cluster-medium {
-	background-color: rgb(241, 211, 87);
-	}
-.leaflet-oldie .marker-cluster-medium div {
-	background-color: rgb(240, 194, 12);
-	}
+    .leaflet-oldie .marker-cluster-medium {
+    	background-color: rgb(241, 211, 87);
+    	}
+    .leaflet-oldie .marker-cluster-medium div {
+    	background-color: rgb(240, 194, 12);
+    	}
 
-.leaflet-oldie .marker-cluster-large {
-	background-color: rgb(253, 156, 115);
-	}
-.leaflet-oldie .marker-cluster-large div {
-	background-color: rgb(241, 128, 23);
-}
+    .leaflet-oldie .marker-cluster-large {
+    	background-color: rgb(253, 156, 115);
+    	}
+    .leaflet-oldie .marker-cluster-large div {
+    	background-color: rgb(241, 128, 23);
+    }
 
-.marker-cluster {
-	background-clip: padding-box;
-	border-radius: 20px;
-	}
-.marker-cluster div {
-	width: 30px;
-	height: 30px;
-	margin-left: 5px;
-	margin-top: 5px;
+    .marker-cluster {
+    	background-clip: padding-box;
+    	border-radius: 20px;
+    	}
+    .marker-cluster div {
+    	width: 30px;
+    	height: 30px;
+    	margin-left: 5px;
+    	margin-top: 5px;
 
-	text-align: center;
-	border-radius: 15px;
-	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
-	}
-.marker-cluster span {
-	line-height: 30px;
-	}
-.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
-	-webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
-	-moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
-	-o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
-	transition: transform 0.3s ease-out, opacity 0.3s ease-in;
-	}
+    	text-align: center;
+    	border-radius: 15px;
+    	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+    	}
+    .marker-cluster span {
+    	line-height: 30px;
+    	}
+    .leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
+    	-webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+    	-moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+    	-o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+    	transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+    	}
   </style>
  </head>
 <body>
@@ -312,15 +322,15 @@
    <div id='listings' class='listings'>
 <article>
   <h2> Brief Explanation of the events for this weeks Lab </h2>
-<p>Over the last three weeks, we’ve learned about setting up web pages,
+<p>Over the last three weeks in the Web Mapping Course offered by Clark University, I've learned about setting up web pages,
   embedding maps, and building our own maps with increasing functionality.
-   In all of the previous studios, we’ve had starter code for you to work with.
-    This week you’ll be bringing all of your new technical skills together by
-     creating your own HTML files and a series of maps they will contain.
-     This week we will also be focusing more on data sources for your maps.
-     Up to this point, we’ve been creating basic geometry by including it
+   In all of the previous studios, we’ve had starter code to work with.
+    For this studio, I was asked to tie the technical skills together by
+     creating my own HTML files containing a series of maps.
+     This studio focuses more on data sources for the maps.
+     Up to this point, our class has been creating basic geometry by including it
      <em>within</em> the code of our page or by altering map tiles.
-     This week, our code will be referencing data that we host from a variety of sources.</p>
+     This week, my code references  data hosted from a variety of sources.</p>
 
 
 <p>Map that uses hosted GeoJSON files for data. It’s time to map some rats!
@@ -330,69 +340,56 @@
     It's quite easy to follow and covers downloading data, basic geographic
     features, styling, and interactivity. However, it uses an outdated version
     of some Leaflets libraries, which won’t render on Github pages.
-    So, you’ll need to see <a href="https://github.com/Shadrock/first-leaflet-map">this Github repo</a>
-     to learn about which lines of code to replace. I suggest you read through
-      this repo first, to get an idea of where you’ll need to replace things,
+    So, we needed to see <a href="https://github.com/Shadrock/first-leaflet-map">this Github repo</a>
+     to learn about which lines of code to replace. It was recommended that we read through
+      this repo first, to get an idea of where we needed to replace things,
       and keep it open as you work through the Rat Map tutorial. Be on the
       lookout for a "secret challenge" this week.
-      Here's a hint: <a href="https://www.e-education.psu.edu/maps/l5_p5.html" rel="nofollow">"rainbow" color ramps in maps are extremely problematic</a>...
+      This was a hint: <a href="https://www.e-education.psu.edu/maps/l5_p5.html" rel="nofollow">"rainbow" color ramps in maps are extremely problematic</a>...
       be on the lookout for them and possible alternatives.</p> </article>
     </div>
  </div>
  <div id='map' class='map'></div>
-    <script>
-    // initialize the map
-    var map = L.map('map').setView([42.35, -71.08], 13);
+ <script>
 
- // load a tile layer
-    L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
-   {
-     attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
-     maxZoom: 17,
-     minZoom: 9
-   }).addTo(map);
-   // bike lanes
-  /*L.tileLayer('http://tiles.mapc.org/trailmap-onroad/{z}/{x}/{y}.png',
-  {
-    maxZoom: 17,
-    minZoom: 9
-  }).addTo(map);*/
-  // load GeoJSON from an external file
-  $.getJSON("../neighborhoods.geojson",function(hoodData){
-    L.geoJson( hoodData  , {
-       style: function(feature){
-         var fillColor,
-             density = feature.properties.density;
-         if ( density > 80 ) fillColor = "#006837";
-         else if ( density > 40 ) fillColor = "#31a354";
-         else if ( density > 20 ) fillColor = "#78c679";
-         else if ( density > 10 ) fillColor = "#c2e699";
-         else if ( density > 0 ) fillColor = "#ffffcc";
-         else fillColor = "#f7f7f7";  // no data
-         return { color: "#999", weight: 1, fillColor: fillColor, fillOpacity: .6 };
-       },
-       onEachFeature: function( feature, layer ){
-         layer.bindPopup( "<strong>" + feature.properties.Name + "</strong><br/>" + feature.properties.density + " rats per square mile" )
-       }
-     }).addTo(map);
+// initialize the map
+var map = L.map('map').setView([42.35, -71.08], 13);
+
+// load a tile layer
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
+{
+  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
+  maxZoom: 17,
+  minZoom: 9
+}).addTo(map);
+
+// Load GeoJSON from an external file
+
+$.getJSON("../rodents.geojson",function(data){
+        var ratIcon = L.icon({
+          iconUrl: 'http://andywoodruff.com/maptime-leaflet/rat.png',
+          iconSize: [60,50]
+        });
+        var rodents = L.geoJson(data,{
+          pointToLayer: function(feature,latlng){
+            var marker = L.marker(latlng,{icon: ratIcon});
+            marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
+            return marker;
+          }
+        });
+        var clusters = L.markerClusterGroup();
+        clusters.addLayer(rodents);
+        map.addLayer(clusters);
+
 });
-
-$.getJSON("rodents.geojson",function(data){
-    var ratIcon = L.icon({
-      iconUrl: 'http://andywoodruff.com/maptime-leaflet/rat.png',
-      iconSize: [60,50]
-    });
-    var rodents = L.geoJson(data,{
-      pointToLayer: function(feature,latlng){
-        var marker = L.marker(latlng,{icon: ratIcon});
-        marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
-        return marker;
-      }
-    });
-    var clusters = L.markerClusterGroup();
-    clusters.addLayer(rodents);
-    map.addLayer(clusters);
-
+$.getJSON("../rodents.geojson",function(data){
+          var locations = data.features.map(function(rat) {
+          var location = rat.geometry.coordinates.reverse();
+          location.push(0.5);
+          return location;
+  });
+  var heat = L.heatLayer(locations, { radius: 35 });
+  map.addLayer(heat);
 });
 </script>
 </body>
