@@ -7,6 +7,7 @@
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
   <script src='https://npmcdn.com/csv2geojson@latest/csv2geojson.js'></script>
   <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
@@ -196,7 +197,9 @@
     .mapboxgl-container {
       cursor: pointer;
     }
-
+    .mapboxgl-container .leaflet-marker-icon {
+      cursor:pointer;
+    }
     .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
       margin-top: 3px;
     }
@@ -207,13 +210,13 @@
     .marker {
       /*border: 2px solid;*/
       cursor: pointer;
-      height:80px;
-      width:80px;
+      height:50px;
+      width:50px;
       background-size: contain;
       /*margin-left: 28px;*/
       /*https://ih1.redbubble.net/image.372813300.2775/flat,128x128,075,f-pad,128x128,f8f8f8.u2.jpg*/
-      /*https://images.vexels.com/media/users/3/145801/isolated/lists/0678bf44860bd04584f32be273e1fe2b-punk-logo.png*/
-      background-image: url("https://cdn0.iconfinder.com/data/icons/punk-rock/64/hand-rock-punk-heavy-512.png");
+      background-image: url("https://images.vexels.com/media/users/3/145801/isolated/lists/0678bf44860bd04584f32be273e1fe2b-punk-logo.png");
+      /* background-image: url("https://cdn0.iconfinder.com/data/icons/punk-rock/64/hand-rock-punk-heavy-512.png");*/
       /*background-color: rgba(0, 0, 0, 0);*/
     }
   </style>
@@ -289,12 +292,13 @@
               map.addLayer({
                 'id': 'csvData',
                 'type': 'circle',
+                "icon-allow-overlap": true,
                 'source': {
                   'type': 'geojson',
                   'data': data
-                },
-
+                }
               });
+              addMarkers();
 
 
               // When a click event occurs on a feature in the csvData layer, open a popup at the
@@ -326,8 +330,6 @@
                   .addMarkers();
               });
 
-
-
               function addMarkers() {
               data.features.forEach(function(marker) {
                 /* Create a div element for the marker. */
@@ -352,18 +354,10 @@
                  * 3. Highlight listing in sidebar (and remove highlight for all other listings)
                 **/
                 el.addEventListener('click', function(e){
-                  /* Fly to the point */
-                  flyToStore(marker);
                   /* Close all other popups and display popup for clicked store */
                   createPopUp(marker);
                   /* Highlight listing in sidebar */
-                  var activeItem = document.getElementsByClassName('active');
-                  e.stopPropagation();
-                  if (activeItem[0]) {
-                    activeItem[0].classList.remove('active');
-                  }
-                  var listing = document.getElementById('listing-' + marker.properties.id);
-                  listing.classList.add('active');
+
                 });
               });
               }
@@ -381,11 +375,25 @@
               var bbox = turf.bbox(data);
               map.fitBounds(bbox, { padding: 50 });
 
+
             });
 
           });
         };
       });
+
+
+      function createPopUp(currentFeature) {
+        var popUps = document.getElementsByClassName('mapboxgl-popup');
+        if (popUps[0]) popUps[0].remove();
+        var popup = new mapboxgl.Popup({closeOnClick: false})
+          .setLngLat(currentFeature.geometry.coordinates)
+          .setHTML(`<h3>` + currentFeature.properties.Band_Name + `</h3>` + `<h4>` + `<b>` + `Origin: ` + `</b>` +
+          currentFeature.properties.Origin + `</h4>` + `<h4>` + `<b>` + `Years Active: ` + `</b>` + currentFeature.properties.Years_Active + `</h4>` +
+          `<h4>` + `<b>` + `Notes: ` + `</b>` + currentFeature.properties.Notes + `</h4>`)
+          .addTo(map);
+      }
+
 
   </script>
 
