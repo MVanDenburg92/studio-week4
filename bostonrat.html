@@ -231,6 +231,72 @@
         color: black;
         padding-left: 12%;
       }
+      .marker-cluster-small {
+	background-color: rgba(181, 226, 140, 0.6);
+	}
+.marker-cluster-small div {
+	background-color: rgba(110, 204, 57, 0.6);
+	}
+
+.marker-cluster-medium {
+	background-color: rgba(241, 211, 87, 0.6);
+	}
+.marker-cluster-medium div {
+	background-color: rgba(240, 194, 12, 0.6);
+	}
+
+.marker-cluster-large {
+	background-color: rgba(253, 156, 115, 0.6);
+	}
+.marker-cluster-large div {
+	background-color: rgba(241, 128, 23, 0.6);
+	}
+
+	/* IE 6-8 fallback colors */
+.leaflet-oldie .marker-cluster-small {
+	background-color: rgb(181, 226, 140);
+	}
+.leaflet-oldie .marker-cluster-small div {
+	background-color: rgb(110, 204, 57);
+	}
+
+.leaflet-oldie .marker-cluster-medium {
+	background-color: rgb(241, 211, 87);
+	}
+.leaflet-oldie .marker-cluster-medium div {
+	background-color: rgb(240, 194, 12);
+	}
+
+.leaflet-oldie .marker-cluster-large {
+	background-color: rgb(253, 156, 115);
+	}
+.leaflet-oldie .marker-cluster-large div {
+	background-color: rgb(241, 128, 23);
+}
+
+.marker-cluster {
+	background-clip: padding-box;
+	border-radius: 20px;
+	}
+.marker-cluster div {
+	width: 30px;
+	height: 30px;
+	margin-left: 5px;
+	margin-top: 5px;
+
+	text-align: center;
+	border-radius: 15px;
+	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	}
+.marker-cluster span {
+	line-height: 30px;
+	}
+.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
+	-webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+	-moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+	-o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+	transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+	}
   </style>
  </head>
 <body>
@@ -286,13 +352,13 @@
      minZoom: 9
    }).addTo(map);
    // bike lanes
-  L.tileLayer('http://tiles.mapc.org/trailmap-onroad/{z}/{x}/{y}.png',
+  /*L.tileLayer('http://tiles.mapc.org/trailmap-onroad/{z}/{x}/{y}.png',
   {
     maxZoom: 17,
     minZoom: 9
-  }).addTo(map);
+  }).addTo(map);*/
   // load GeoJSON from an external file
-  $.getJSON("neighborhoods.geojson",function(hoodData){
+  $.getJSON("../neighborhoods.geojson",function(hoodData){
     L.geoJson( hoodData  , {
        style: function(feature){
          var fillColor,
@@ -312,14 +378,21 @@
 });
 
 $.getJSON("rodents.geojson",function(data){
-   var locations = data.features.map(function(rat) {
-    var location = rat.geometry.coordinates.reverse();
-    location.push(0.5);
-    return location;
-  });
+    var ratIcon = L.icon({
+      iconUrl: 'http://andywoodruff.com/maptime-leaflet/rat.png',
+      iconSize: [60,50]
+    });
+    var rodents = L.geoJson(data,{
+      pointToLayer: function(feature,latlng){
+        var marker = L.marker(latlng,{icon: ratIcon});
+        marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
+        return marker;
+      }
+    });
+    var clusters = L.markerClusterGroup();
+    clusters.addLayer(rodents);
+    map.addLayer(clusters);
 
-  var heat = L.heatLayer(locations, { radius: 35 });
-  map.addLayer(heat);
 });
 </script>
 </body>
