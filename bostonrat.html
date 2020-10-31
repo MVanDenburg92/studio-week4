@@ -51,6 +51,7 @@
         width:75.3333%;;
         margin-left: auto;
         margin-right: auto;
+        overflow: auto;
       }
       .pad2 {
         padding:20px;
@@ -365,6 +366,26 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.pn
 
 // Load GeoJSON from an external file
 
+$.getJSON("https://spshreena.github.io/studio-week4//neighborhoods.geojson",function(hoodData){
+     L.geoJson( hoodData , {
+       // Adds choropleth
+       style: function(feature){
+      var fillColor,
+          density = feature.properties.density;
+      if ( density > 80 ) fillColor = "#006837";
+      else if ( density > 40 ) fillColor = "#31a354";
+      else if ( density > 20 ) fillColor = "#78c679";
+      else if ( density > 10 ) fillColor = "#c2e699";
+      else if ( density > 0 ) fillColor = "#ffffcc";
+      else fillColor = "#f7f7f7";  // no data
+      return { color: "#999", weight: 1, fillColor: fillColor, fillOpacity: .6 };
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup( "<strong>" + feature.properties.Name + "</strong><br/>" + feature.properties.density + " rats per square mile" )
+    }
+  } ).addTo(map);
+   });
+
 $.getJSON("../rodents.geojson",function(data){
         var ratIcon = L.icon({
           iconUrl: 'http://andywoodruff.com/maptime-leaflet/rat.png',
@@ -381,15 +402,6 @@ $.getJSON("../rodents.geojson",function(data){
         clusters.addLayer(rodents);
         map.addLayer(clusters);
 
-});
-$.getJSON("../rodents.geojson",function(data){
-          var locations = data.features.map(function(rat) {
-          var location = rat.geometry.coordinates.reverse();
-          location.push(0.5);
-          return location;
-  });
-  var heat = L.heatLayer(locations, { radius: 35 });
-  map.addLayer(heat);
 });
 </script>
 </body>
