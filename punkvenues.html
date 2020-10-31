@@ -16,6 +16,7 @@
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
     type="text/css"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&display=swap" rel="stylesheet">
 
     <style>
       body {
@@ -64,8 +65,8 @@
       }
 
       h1 {
-        font-family: 'Press Start 2P', cursive;
-        font-size:40px;
+        font-family: 'Cabin Sketch', cursive;
+        font-size:60px;
         margin:0;
         font-weight:400;
         line-height: 40px;
@@ -83,6 +84,7 @@
       }
 
       .heading {
+
         background:#fff;
         border-left:10px solid black;border-bottom:10px solid white; border-right:10px solid black;
         min-height:60px;
@@ -212,34 +214,35 @@ background-image:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)), url("h
         border-bottom-color: #91c949;
       }
 
-.navbar {
-  overflow: hidden;
-  background-color: #333;
-  position: fixed; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
-  width: 100%; /* Full width */
-  border-left:10px solid black;
-  border-bottom:10px solid white;
-  border-right:10px solid black;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)),url("https://media.gettyimages.com/vectors/massachusetts-map-on-grunge-canvas-background-vector-id516178772?s=612x612");
+      .navbar {
+        font-family: 'Cabin Sketch', cursive;
 
-}
-.navbar a {
-  float: right;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 30px 16px;
-  text-decoration: none;
-  padding-right: 10%; font-size:30px;
-}
+        background-color: #333;
+        position: fixed; /* Set the navbar to fixed position */
+        top: 0; /* Position the navbar at the top of the page */
+        width: 100%; /* Full width */
+        border-left:10px solid black;
+        border-bottom:10px solid white;
+        border-right:10px solid black;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),url("https://media.gettyimages.com/vectors/massachusetts-map-on-grunge-canvas-background-vector-id516178772?s=612x612");
 
-/* Change background on mouse-over */
-.navbar a:hover {
-  background: #ddd;
-  color: black;
-  padding-left: 12%;
-}
+      }
+      .navbar a {
+        float: right;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 30px 16px;
+        text-decoration: none;
+        padding-right: 7%; font-size:30px;
+      }
+
+      /* Change background on mouse-over */
+      .navbar a:hover {
+        background: #ddd;
+        color: black;
+        padding-left: 12%;
+      }
   </style>
   </head>
   <body>
