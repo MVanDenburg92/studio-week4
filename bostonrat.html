@@ -363,8 +363,8 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.pn
 
 // Load GeoJSON from an external file
 
-$.getJSON("https://spshreena.github.io/studio-week4//neighborhoods.geojson",function(hoodData){
-     L.geoJson( hoodData , {
+$.getJSON("../neighborhoods.geojson",function(hoodData){
+     L.geoJson(hoodData, {
        // Adds choropleth
        style: function(feature){
       var fillColor,
