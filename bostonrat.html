@@ -385,9 +385,9 @@ $.getJSON("https://spshreena.github.io/studio-week4//neighborhoods.geojson",func
   } ).addTo(map);
    });
 
-$.getJSON("/rodents.geojson",function(data){
+$.getJSON("https://spshreena.github.io/studio-week4/rodents.geojson",function(data){
         var ratIcon = L.icon({
-          iconUrl: '/rat.png',
+          iconUrl: 'https://spshreena.github.io/studio-week4/rat.png',
           iconSize: [60,50]
         });
         var rodents = L.geoJson(data,{
