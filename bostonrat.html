@@ -365,7 +365,7 @@ L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
 
 // Load GeoJSON from an external file
 
-$.getJSON("/neighborhoods.geojson",function(hoodData){
+$.getJSON("https://spshreena.github.io/studio-week4//neighborhoods.geojson",function(hoodData){
      L.geoJson(hoodData, {
        // Adds choropleth
        style: function(feature){
